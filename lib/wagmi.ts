@@ -21,20 +21,6 @@ const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "c0a7d5ae1
 export const config = getDefaultConfig({
     appName: "Polymarket AI Agent",
     projectId,
-    wallets: [
-        {
-            groupName: 'Scan QR Code (Phone)',
-            wallets: [walletConnectWallet],
-        },
-        {
-            groupName: 'Popular',
-            wallets: [metaMaskWallet, coinbaseWallet, rainbowWallet],
-        },
-        {
-            groupName: 'More Brokerages & Wallets',
-            wallets: [trustWallet, ledgerWallet, phantomWallet, okxWallet, binanceWallet, rabbyWallet, safepalWallet, bitgetWallet],
-        },
-    ],
     chains: [mainnet, polygon, optimism, arbitrum, base],
     ssr: true,
 });
