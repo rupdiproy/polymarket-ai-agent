@@ -146,9 +146,9 @@ export default function DashboardPage() {
             {/* Top Bar Header Area */}
             <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4 bg-card/20 backdrop-blur-[12px] border-white/5 p-4 rounded-xl border shadow-lg">
 
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full xl:w-auto">
                     {/* User Pill */}
-                    <div className="flex items-center gap-3 bg-black/30 backdrop-blur-md p-2 pr-4 rounded-full border border-white/5">
+                    <div className="flex items-center gap-3 bg-black/30 backdrop-blur-md p-2 pr-4 rounded-full border border-white/5 w-full sm:w-auto">
                         <Avatar className="h-8 w-8 border border-white/10">
                             <AvatarImage src={user?.photoURL || ""} alt="User Avatar" />
                             <AvatarFallback>{user?.displayName?.charAt(0) || "U"}</AvatarFallback>
@@ -160,7 +160,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Agent Status Indicator */}
-                    <div className="flex gap-4 items-center pl-4 border-l border-white/10">
+                    <div className="flex gap-4 items-center sm:pl-4 sm:border-l border-white/10 w-full sm:w-auto justify-between sm:justify-start">
                         <Badge variant={agentState === "IDLE" ? "secondary" : agentState === "MONITORING" ? "default" : "destructive"}
                             className={`${agentState === "MONITORING" ? "bg-blue-500 hover:bg-blue-600 animate-pulse-glow-blue border-transparent transition-all" : agentState === "EXECUTING" ? "bg-green-500 animate-pulse-glow-green" : ""} gap-1 py-1`}>
                             {agentState === "MONITORING" && <Activity className="w-3 h-3 animate-spin duration-3000" />}
@@ -321,7 +321,7 @@ export default function DashboardPage() {
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <ScrollArea className="w-full pb-2 mb-4">
+                <div className="w-full pb-2 mb-4 overflow-x-auto overflow-y-hidden">
                     <TabsList className="inline-flex w-max lg:w-full justify-start h-12 p-1 bg-card/30 backdrop-blur-md border border-white/5 shadow-inner">
                         <TabsTrigger value="wallet" className="flex-1">Wallet</TabsTrigger>
                         <TabsTrigger value="traders" className="flex-1">Traders</TabsTrigger>
@@ -332,7 +332,7 @@ export default function DashboardPage() {
                         <TabsTrigger value="logs" className="flex-1">Logs</TabsTrigger>
                         <TabsTrigger value="config" className="flex-1">Config</TabsTrigger>
                     </TabsList>
-                </ScrollArea>
+                </div>
 
                 {/* --- Wallet Tab --- */}
                 <TabsContent value="wallet" className="focus-visible:outline-none">
@@ -688,9 +688,9 @@ function TraderRow({ t }: { t: any }) {
             {/* Strategy highlight bar */}
             <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500/50 to-purple-500/50" />
 
-            <div className="flex items-start justify-between gap-4 pl-2">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pl-2 w-full">
                 {/* Left: Avatar & Info */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 w-full sm:w-auto">
                     <div className="relative shrink-0">
                         <Avatar className="h-12 w-12 border border-white/10 bg-black/50">
                             <AvatarImage src={t.image || `https://api.dicebear.com/7.x/identicon/svg?seed=${t.name}`} alt={t.name} />
@@ -728,8 +728,8 @@ function TraderRow({ t }: { t: any }) {
                 </div>
 
                 {/* Right: Actions */}
-                <div className="flex flex-col gap-2 items-end shrink-0">
-                    <span className="text-[10px] text-muted-foreground italic flex items-center gap-1">
+                <div className="flex flex-col sm:items-end gap-2 shrink-0 border-t sm:border-0 border-white/10 pt-3 sm:pt-0 w-full sm:w-auto">
+                    <span className="text-[10px] text-muted-foreground italic flex items-center gap-1 sm:justify-end">
                         <RefreshCw className="w-3 h-3" /> Updated {t.lastActive || "just now"}
                     </span>
                     <div className="flex items-center gap-2 mt-1">
