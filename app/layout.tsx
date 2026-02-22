@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${inter.className} min-h-screen bg-background antialiased text-foreground relative`}>
-        <div className="fixed inset-0 -z-20 bg-[url('/candles-bg.png')] bg-cover bg-center bg-no-repeat opacity-50 mix-blend-screen" />
+        <div className="fixed inset-0 -z-20 bg-[url('/candles-bg.png')] bg-cover bg-center bg-no-repeat opacity-30" />
         <div className="fixed inset-0 -z-10 bg-gradient-to-br from-background/30 via-background/60 to-background/90 backdrop-blur-sm" />
         <Providers>
           {children}
