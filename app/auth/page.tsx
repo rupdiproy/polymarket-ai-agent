@@ -14,10 +14,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function AuthPage() {
-    const { user, login, isDemoMode } = useAuth();
+    const { user, login, loginWithEmail, registerWithEmail, isDemoMode } = useAuth();
     const router = useRouter();
     const [loadingMsg, setLoadingMsg] = useState("");
     const [mounted, setMounted] = useState(false);
+
+    // Form states
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [phone, setPhone] = useState("");
 
     useEffect(() => {
         setMounted(true);
@@ -48,11 +53,43 @@ export default function AuthPage() {
         }
     };
 
-    const handleEmailPhoneFallback = () => {
+    const handleEmailSubmit = async () => {
+        if (!email || !password) {
+            toast.error("Please fill in both email and password.");
+            return;
+        }
+
+        if (isDemoMode) {
+            handleDemoLogin();
+            return;
+        }
+
+        setLoadingMsg("Authenticating...");
+        try {
+            await loginWithEmail(email, password);
+        } catch (error: any) {
+            // If the account doesn't exist, try creating it automatically for a seamless UX
+            if (error?.code === "auth/invalid-credential" || error?.code === "auth/user-not-found") {
+                try {
+                    setLoadingMsg("Creating new account...");
+                    await registerWithEmail(email, password);
+                } catch (regError: any) {
+                    toast.error(regError.message || "Failed to create account.");
+                    setLoadingMsg("");
+                }
+            } else {
+                console.error(error);
+                toast.error(error.message || "Email authentication failed.");
+                setLoadingMsg("");
+            }
+        }
+    };
+
+    const handlePhoneSubmit = () => {
         if (isDemoMode) {
             handleDemoLogin();
         } else {
-            toast.error("Email and Phone authentication are disabled. Please use Google Sign-In.");
+            toast.error("Phone Verification requires a Recaptcha configuration in Firebase. Please use Email or Google.", { duration: 5000 });
         }
     };
 
@@ -122,17 +159,17 @@ export default function AuthPage() {
                             <div className="space-y-3">
                                 <div className="space-y-1">
                                     <Label htmlFor="email">Email</Label>
-                                    <Input id="email" type="email" placeholder="m@example.com" className="bg-black/20 focus-visible:ring-primary shadow-inner" />
+                                    <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="m@example.com" className="bg-black/20 focus-visible:ring-primary shadow-inner" />
                                 </div>
                                 <div className="space-y-1">
                                     <div className="flex items-center justify-between">
                                         <Label htmlFor="password">Password</Label>
                                         <Link href="#" className="text-xs text-primary hover:underline">Forgot?</Link>
                                     </div>
-                                    <Input id="password" type="password" className="bg-black/20 focus-visible:ring-primary shadow-inner" />
+                                    <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} className="bg-black/20 focus-visible:ring-primary shadow-inner" />
                                 </div>
                             </div>
-                            <Button className="w-full h-11 get-started group" onClick={handleEmailPhoneFallback}>
+                            <Button className="w-full h-11 get-started group" onClick={handleEmailSubmit}>
                                 <Mail className="mr-2 h-4 w-4" /> Sign In with Email
                                 <ArrowRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                             </Button>
@@ -142,14 +179,14 @@ export default function AuthPage() {
                             <div className="space-y-3">
                                 <div className="space-y-1">
                                     <Label htmlFor="phone">Phone Number</Label>
-                                    <Input id="phone" type="tel" placeholder="+1 (555) 000-0000" className="bg-black/20 focus-visible:ring-primary shadow-inner" />
+                                    <Input id="phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="+1 (555) 000-0000" className="bg-black/20 focus-visible:ring-primary shadow-inner" />
                                 </div>
                                 <div className="p-3 rounded-md bg-muted/30 border border-white/5 text-xs text-muted-foreground flex gap-2">
                                     <ShieldCheck className="h-4 w-4 text-green-500 shrink-0" />
                                     <span>We&apos;ll text you a secure code to confirm your number. Standard rates apply.</span>
                                 </div>
                             </div>
-                            <Button className="w-full h-11 group" variant="secondary" onClick={handleEmailPhoneFallback}>
+                            <Button className="w-full h-11 group" variant="secondary" onClick={handlePhoneSubmit}>
                                 <Smartphone className="mr-2 h-4 w-4" /> Send Login Code
                             </Button>
                         </TabsContent>

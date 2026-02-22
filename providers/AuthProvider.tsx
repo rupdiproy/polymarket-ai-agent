@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { onAuthStateChanged, signInWithPopup, signOut, User } from "firebase/auth";
+import { onAuthStateChanged, signInWithPopup, signOut, User, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, googleProvider, isDemoMode } from "../lib/firebase";
 import { useRouter } from "next/navigation";
 
@@ -9,6 +9,8 @@ interface AuthContextType {
     user: User | null;
     loading: boolean;
     login: () => Promise<void>;
+    loginWithEmail: (e: string, p: string) => Promise<void>;
+    registerWithEmail: (e: string, p: string) => Promise<void>;
     logout: () => Promise<void>;
     isDemoMode: boolean;
 }
@@ -17,6 +19,8 @@ const AuthContext = createContext<AuthContextType>({
     user: null,
     loading: true,
     login: async () => { },
+    loginWithEmail: async () => { },
+    registerWithEmail: async () => { },
     logout: async () => { },
     isDemoMode,
 });
@@ -73,6 +77,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    const loginWithEmail = async (email: string, pass: string) => {
+        if (isDemoMode) {
+            return login();
+        }
+        if (!auth) return;
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+            router.push("/dashboard");
+        } catch (error) {
+            console.error("Email login failed", error);
+            throw error;
+        }
+    };
+
+    const registerWithEmail = async (email: string, pass: string) => {
+        if (isDemoMode) {
+            return login();
+        }
+        if (!auth) return;
+        try {
+            await createUserWithEmailAndPassword(auth, email, pass);
+            router.push("/dashboard");
+        } catch (error) {
+            console.error("Email registration failed", error);
+            throw error;
+        }
+    };
+
     const logout = async () => {
         if (isDemoMode) {
             setUser(null);
@@ -91,7 +123,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, logout, isDemoMode }}>
+        <AuthContext.Provider value={{ user, loading, login, loginWithEmail, registerWithEmail, logout, isDemoMode }}>
             {children}
         </AuthContext.Provider>
     );
