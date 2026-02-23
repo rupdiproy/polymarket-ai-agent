@@ -1,11 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: any = {
-  eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-  experimental: { webpackBuildWorker: false },
-  turbopack: {},
-  webpack: (config) => {
+  turbopack: {
+    resolveAlias: {
+      "@react-native-async-storage/async-storage": "./async-storage-mock.js",
+    },
+  },
+  webpack: (config: any) => {
     if (!config.resolve) config.resolve = {};
     config.resolve.alias = {
       ...(config.resolve.alias || {}),

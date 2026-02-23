@@ -23,26 +23,5 @@ export const config = getDefaultConfig({
     projectId,
     chains: [mainnet, polygon, optimism, arbitrum, base],
     ssr: true,
-    // Metadata required for mobile deep linking (Safari)
-    metadata: {
-        name: "Polymarket AI Agent",
-        description: "AI powered Polymarket trading assistant",
-        url: "https://polymarket-agent.vercel.app",
-        icons: [],
-    },
-    // Explicit wallet list with WalletConnect options
-    wallets: {
-        walletConnect: walletConnectWallet({ projectId, qrcode: true }),
-        metaMask: metaMaskWallet,
-        rainbow: rainbowWallet,
-        coinbase: coinbaseWallet,
-        trust: trustWallet,
-        ledger: ledgerWallet,
-        phantom: phantomWallet,
-        okx: okxWallet,
-        safepal: safepalWallet,
-        bitget: bitgetWallet,
-        rabby: rabbyWallet,
-        binance: binanceWallet,
-    },
+
 });
