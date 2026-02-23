@@ -16,6 +16,7 @@
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@tanstack/react-query": "^5.90.21",
     "@types/downloadjs": "^1.4.6",
+    "@vercel/analytics": "^1.6.1",
     "ai": "^6.0.97",
     "assert": "^2.1.0",
     "browserify-zlib": "^0.2.0",
