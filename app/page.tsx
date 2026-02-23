@@ -225,10 +225,13 @@ export default function Home() {
 
         {/* Live Marquee Ticker */}
         <div className="w-full relative z-10 flex flex-col items-center">
-          <div className="bg-blue-500/10 shadow-[0_0_15px_rgba(59,130,246,0.15)] border-t border-blue-500/30 w-full py-1.5 flex justify-center items-center gap-2 backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse shadow-[0_0_8px_rgba(59,130,246,1)]" />
-            <p className="text-[10px] md:text-xs text-blue-300/90 font-mono tracking-widest uppercase font-semibold">
-              <span className="text-blue-400 font-bold">LIVE FEED:</span> Aggregating real-time data to track the most trending crypto assets across global social platforms
+          <div className="bg-blue-500/10 shadow-[0_0_15px_rgba(59,130,246,0.15)] border-t border-blue-500/30 w-full py-2 px-4 flex flex-col sm:flex-row justify-center items-center gap-2 backdrop-blur-md">
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse shadow-[0_0_8px_rgba(59,130,246,1)]" />
+              <span className="text-blue-400 font-bold text-[10px] md:text-xs">LIVE FEED:</span>
+            </div>
+            <p className="text-[10px] md:text-xs text-blue-300/90 font-mono tracking-widest uppercase font-semibold text-center sm:text-left leading-snug">
+              Aggregating real-time data to track the most trending crypto assets across global social platforms
             </p>
           </div>
           <div className="w-full bg-black/40 border-b border-blue-500/20 py-3 overflow-hidden whitespace-nowrap flex shadow-[0_10px_20px_rgba(0,0,0,0.5)]">

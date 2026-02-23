@@ -120,13 +120,14 @@ export default function DashboardPage() {
     const handleSnapshot = () => {
         if (dashboardRef.current) {
             toast.info("Generating snapshot...");
-            toPng(dashboardRef.current, { cacheBust: true, backgroundColor: '#09090b', style: { transform: 'scale(1)' } })
+            toPng(dashboardRef.current, { cacheBust: true, backgroundColor: '#09090b', pixelRatio: 1 })
                 .then((dataUrl) => {
                     download(dataUrl, 'polymarket-agent-snapshot.png');
                     toast.success("Snapshot saved!");
                 })
-                .catch(() => {
-                    toast.error("Failed to capture snapshot");
+                .catch((e) => {
+                    console.error("Snapshot error:", e);
+                    toast.error("Failed to capture snapshot on this device");
                 });
         }
     };
@@ -175,7 +176,7 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-6 w-full xl:w-auto overflow-x-auto pb-2 xl:pb-0">
+                <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 sm:gap-6 w-full xl:w-auto pt-2 xl:pt-0">
                     {/* Simulation vs Live Toggle */}
                     <div className="flex items-center gap-2 shrink-0">
                         <Label htmlFor="live-mode" className="text-sm cursor-pointer select-none">Simulate</Label>
