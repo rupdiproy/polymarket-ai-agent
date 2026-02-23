@@ -36,37 +36,80 @@ export default function DashboardPage() {
     const [isLiveEnabled, setIsLiveEnabled] = useState(false);
     const [showOnboarding, setShowOnboarding] = useState(false);
 
-    const [metrics, setMetrics] = useState({
+    const [demoMetrics, setDemoMetrics] = useState({
         observed: 1245,
         executed: 34,
         volume: 12450.00,
         successRate: 68.2,
-        pnl: 450.00 // Start with some initial PnL
+        pnl: 450.00
     });
+
+    const [liveMetrics, setLiveMetrics] = useState({
+        observed: 0,
+        executed: 0,
+        volume: 0,
+        successRate: 0,
+        pnl: 0
+    });
+
+    const metrics = isLiveEnabled ? liveMetrics : demoMetrics;
+
+    useEffect(() => {
+        const uid = user?.uid || "demo_user";
+        const savedDemo = localStorage.getItem(`metrics_${uid}_demo`);
+        if (savedDemo) setDemoMetrics(JSON.parse(savedDemo));
+
+        const savedLive = localStorage.getItem(`metrics_${uid}_live`);
+        if (savedLive) setLiveMetrics(JSON.parse(savedLive));
+    }, [user]);
+
+    useEffect(() => {
+        const uid = user?.uid || "demo_user";
+        localStorage.setItem(`metrics_${uid}_demo`, JSON.stringify(demoMetrics));
+    }, [demoMetrics, user]);
+
+    useEffect(() => {
+        const uid = user?.uid || "demo_user";
+        localStorage.setItem(`metrics_${uid}_live`, JSON.stringify(liveMetrics));
+    }, [liveMetrics, user]);
+
+    useEffect(() => {
+        if (isConnected && !isDemoMode) {
+            setIsLiveEnabled(true);
+        } else {
+            setIsLiveEnabled(false);
+        }
+    }, [isConnected, isDemoMode]);
 
     useEffect(() => {
         let interval: NodeJS.Timeout;
         if (agentState !== "IDLE") {
             interval = setInterval(() => {
-                setMetrics(prev => {
+                const updater = (prev: any) => {
                     const addObserved = Math.floor(Math.random() * 8) + 1;
                     const addExecuted = Math.random() > 0.85 ? 1 : 0;
                     const addVolume = addExecuted ? (Math.random() * 500 + 50) : 0;
                     const shiftSuccess = (Math.random() * 0.4) - 0.2;
-                    const shiftPnl = (Math.random() * 20) - 8; // Bias towards positive PnL
+                    const shiftPnl = (Math.random() * 20) - 8;
 
                     return {
                         observed: prev.observed + addObserved,
                         executed: prev.executed + addExecuted,
                         volume: prev.volume + addVolume,
-                        successRate: Math.min(99.9, Math.max(40.0, prev.successRate + shiftSuccess)),
+                        successRate: prev.successRate === 0 && addExecuted ? 100 : Math.min(99.9, Math.max(10.0, prev.successRate + shiftSuccess)),
                         pnl: prev.pnl + shiftPnl
                     };
-                });
+                };
+
+                if (isLiveEnabled) {
+                    setLiveMetrics(updater);
+                } else {
+                    setDemoMetrics(updater);
+                }
             }, 2500);
         }
         return () => clearInterval(interval);
-    }, [agentState]);
+    }, [agentState, isLiveEnabled]);
 
     // Keyboard shortcuts
     const [, setKeys] = useState<string[]>([]);
