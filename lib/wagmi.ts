@@ -23,5 +23,7 @@ export const config = getDefaultConfig({
     projectId,
     chains: [mainnet, polygon, optimism, arbitrum, base],
     ssr: true,
-
+    appUrl: "https://polymarket-ai-agent.vercel.app",
+    appDescription: "An AI-powered interface for Polymarket",
+    appIcon: "https://polymarket-ai-agent.vercel.app/favicon.ico",
 });
